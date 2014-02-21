@@ -1,5 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.possebom.openwifipasswordrecover.MainActivity" >
 
@@ -7,7 +6,7 @@
         android:id="@+id/action_search"
         android:title="@string/app_name"
         android:icon="@drawable/ic_launcher"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom" />
+        android:actionViewClass="android.widget.SearchView"
+        android:showAsAction="ifRoom" />
 
 </menu>
