@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Password Recover</string>
+    <string name="no_data">No Data</string>
+    <string name="root">Do you have root ?</string>
+
+</resources>
