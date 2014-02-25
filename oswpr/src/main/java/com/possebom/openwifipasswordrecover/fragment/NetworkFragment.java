@@ -17,6 +17,7 @@
 package com.possebom.openwifipasswordrecover.fragment;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,19 +28,38 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.possebom.openwifipasswordrecover.interfaces.NetworkListener;
 import com.possebom.openwifipasswordrecover.R;
 import com.possebom.openwifipasswordrecover.adapter.NetworkAdapter;
+import com.possebom.openwifipasswordrecover.model.Network;
+import com.possebom.openwifipasswordrecover.parser.NetworkParser;
+
+import java.util.List;
 
 /**
  * Created by alexandre on 20/02/14.
  */
-public class NetworkFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class NetworkFragment extends Fragment implements SearchView.OnQueryTextListener,NetworkListener {
     private NetworkAdapter mAdapter;
     private SearchView mSearchView;
+    private ListView listView;
+    private Context context;
 
     public NetworkFragment() {
         setHasOptionsMenu(true);
         setRetainInstance(true);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getActivity();
+    }
+
+    @Override
+    public void onResume() {
+        new NetworkParser(context, this).execute();
+        super.onResume();
     }
 
     @Override
@@ -78,14 +98,19 @@ public class NetworkFragment extends Fragment implements SearchView.OnQueryTextL
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         final View viewNoData = view.findViewById(R.id.nodataview);
 
-        mAdapter = new NetworkAdapter(getActivity());
-
-        ListView listView = (ListView) view.findViewById(R.id.listview);
-        listView.setAdapter(mAdapter);
+        listView = (ListView) view.findViewById(R.id.listview);
         listView.setFastScrollEnabled(true);
         listView.setEmptyView(viewNoData);
 
         return view;
     }
 
+    @Override
+    public void onParserDone(List<Network> networkList) {
+        mAdapter = new NetworkAdapter(context,networkList);
+        listView.setAdapter(mAdapter);
+        if(networkList.size() > 0 && networkList.get(0).isConnected()){
+            listView.setItemChecked(0, true);
+        }
+    }
 }

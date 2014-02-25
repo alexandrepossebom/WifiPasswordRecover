@@ -16,7 +16,12 @@
 
 package com.possebom.openwifipasswordrecover.parser;
 
+import android.content.Context;
+import android.os.AsyncTask;
+
+import com.possebom.openwifipasswordrecover.interfaces.NetworkListener;
 import com.possebom.openwifipasswordrecover.model.Network;
+import com.possebom.openwifipasswordrecover.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,13 +36,26 @@ import java.util.regex.Pattern;
 /**
  * Created by alexandre on 17/02/14.
  */
-public final class NetworkParser {
+public class NetworkParser extends AsyncTask <Void, Void, List<Network> >{
 
-    private NetworkParser(){
+    private final Context context;
+    private final NetworkListener listener;
 
+    public NetworkParser(final Context context,final NetworkListener listener) {
+        this.listener = listener;
+        this.context = context;
     }
 
-    public static List<Network> getNetworksList() {
+    @Override
+    protected void onPostExecute(List<Network> networkList) {
+        super.onPostExecute(networkList);
+        listener.onParserDone(networkList);
+    }
+
+    @Override
+    protected List<Network> doInBackground(Void... params) {
+
+        final String currNetwork = Utils.getCurrentSsid(context);
         final List<Network> listNetworks = new ArrayList<Network>();
         final String content = readFile();
 
@@ -54,11 +72,18 @@ public final class NetworkParser {
             matcherWpa = patternWpa.matcher(stringNetwork);
             matcherWep = patternWep.matcher(stringNetwork);
 
+            boolean connected = false;
             if (matcherWpa.find() && matcherWpa.groupCount() == 2) {
-                final Network network = new Network(matcherWpa.group(1), matcherWpa.group(2), "wpa");
+                if(currNetwork != null && currNetwork.equals(matcherWpa.group(1))){
+                    connected = true;
+                }
+                final Network network = new Network(matcherWpa.group(1), matcherWpa.group(2),connected, "wpa");
                 listNetworks.add(network);
             } else if (matcherWep.find() && matcherWep.groupCount() == 2) {
-                final Network network = new Network(matcherWep.group(1), matcherWep.group(2), "wep");
+                if(currNetwork != null && currNetwork.equals(matcherWep.group(1))){
+                    connected = true;
+                }
+                final Network network = new Network(matcherWep.group(1), matcherWep.group(2),connected, "wep");
                 listNetworks.add(network);
             }
         }
@@ -68,7 +93,7 @@ public final class NetworkParser {
         return listNetworks;
     }
 
-    private static String readFile() {
+    private String readFile() {
         String ret;
         try {
             Process process = Runtime.getRuntime().exec("su -c cat /data/misc/wifi/wpa_supplicant.conf");

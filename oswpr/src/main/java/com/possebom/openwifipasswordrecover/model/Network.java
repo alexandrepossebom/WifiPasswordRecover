@@ -24,6 +24,15 @@ public class Network implements Comparable<Network> {
     private String ssid = "";
     private String password = "";
     private String type = "";
+    private boolean connected = false;
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
 
     public String getSsid() {
         return ssid;
@@ -49,20 +58,30 @@ public class Network implements Comparable<Network> {
         this.type = type;
     }
 
-    public Network(final String ssid, final String password, final String type) {
+    public Network(final String ssid, final String password, final boolean connected, final String type) {
         this.ssid = ssid;
         this.password = password;
         this.type = type;
+        this.connected = connected;
     }
 
     @Override
     public int compareTo(Network o) {
-        if(o ==null ) {return -1;}
+        if(o ==null || connected) {return -1;}
         return ssid.compareToIgnoreCase(o.ssid);
     }
 
     @Override
     public String toString() {
         return String.format("ssid : %s\npass : %s\ntype : %s", ssid, password, type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean ret = false;
+        if(o != null){
+            ret = o.toString().equals(toString());
+        }
+        return ret;
     }
 }

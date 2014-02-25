@@ -26,7 +26,6 @@ import android.widget.Filterable;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.possebom.openwifipasswordrecover.MyApplication;
 import com.possebom.openwifipasswordrecover.R;
 import com.possebom.openwifipasswordrecover.model.Network;
 
@@ -40,15 +39,15 @@ import java.util.Locale;
 public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filterable {
     private static final String SECTIONS = "abcdefghilmnopqrstuvz";
     private final Context context;
-    private final MyApplication myApplication;
     private Filter networkFilter;
+    private List<Network> listAllNetworks;
     private List<Network> list;
 
-    public NetworkAdapter(final Context context) {
+    public NetworkAdapter(final Context context, final List<Network> list) {
         super();
         this.context = context;
-        myApplication = (MyApplication) context.getApplicationContext();
-        list = myApplication.getList();
+        this.list = list;
+        this.listAllNetworks = list;
     }
 
     @Override
@@ -85,14 +84,6 @@ public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filte
 
         holder.tvSsid.setText(network.getSsid());
         holder.tvPassword.setText(network.getPassword());
-
-
-        if(network.compareTo(myApplication.getCurrentNetwork()) == 0){
-            mConvertView.setBackgroundResource(R.drawable.bg_card_selected);
-        }else{
-            mConvertView.setBackgroundResource(R.drawable.bg_card);
-        }
-
         return mConvertView;
     }
 
@@ -127,7 +118,7 @@ public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filte
 
     @Override
     public Filter getFilter() {
-        if (networkFilter == null){
+        if (networkFilter == null) {
             networkFilter = new NetworkFilter();
         }
         return networkFilter;
@@ -143,13 +134,12 @@ public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filte
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             final FilterResults results = new FilterResults();
-            list = myApplication.getList();
             if (constraint == null || constraint.length() == 0) {
-                results.values = list;
-                results.count = list.size();
+                results.values = listAllNetworks;
+                results.count = listAllNetworks.size();
             } else {
                 final List<Network> mList = new ArrayList<Network>();
-                for (Network network : list) {
+                for (Network network : listAllNetworks) {
                     if (network.getSsid().toLowerCase().contains(constraint.toString().toLowerCase())
                             || network.getPassword().toLowerCase().contains(constraint.toString().toLowerCase())) {
                         mList.add(network);
@@ -163,8 +153,8 @@ public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filte
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-                list = (List<Network>) results.values;
-                notifyDataSetChanged();
+            list = (List<Network>) results.values;
+            notifyDataSetChanged();
         }
 
     }
