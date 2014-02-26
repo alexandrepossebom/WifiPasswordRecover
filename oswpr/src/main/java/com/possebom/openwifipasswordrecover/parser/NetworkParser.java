@@ -36,12 +36,12 @@ import java.util.regex.Pattern;
 /**
  * Created by alexandre on 17/02/14.
  */
-public class NetworkParser extends AsyncTask <Void, Void, List<Network> >{
+public class NetworkParser extends AsyncTask<Void, Void, List<Network>> {
 
     private final Context context;
     private final NetworkListener listener;
 
-    public NetworkParser(final Context context,final NetworkListener listener) {
+    public NetworkParser(final Context context, final NetworkListener listener) {
         this.listener = listener;
         this.context = context;
     }
@@ -54,41 +54,46 @@ public class NetworkParser extends AsyncTask <Void, Void, List<Network> >{
 
     @Override
     protected List<Network> doInBackground(Void... params) {
-
-        final String currNetwork = Utils.getCurrentSsid(context);
+        final String currentSsid = Utils.getCurrentSsid(context);
         final List<Network> listNetworks = new ArrayList<Network>();
         final String content = readFile();
+        Network currentNetwork = null;
+
 
         final Pattern patternNetworks = Pattern.compile("network=\\{(.*?)\\}", Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
         final Pattern patternWpa = Pattern.compile("ssid=\"(.*?)\".*psk=\"(.*?)\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
         final Pattern patternWep = Pattern.compile("ssid=\"(.*?)\".*wep_key.=\"(.*?)\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
 
-        Matcher matcherNetworks = patternNetworks.matcher(content);
-        Matcher matcherWpa;
-        Matcher matcherWep;
+        final Matcher matcherNetworks = patternNetworks.matcher(content);
 
         while (matcherNetworks.find()) {
             final String stringNetwork = matcherNetworks.group(1);
-            matcherWpa = patternWpa.matcher(stringNetwork);
-            matcherWep = patternWep.matcher(stringNetwork);
+            final Matcher matcherWpa = patternWpa.matcher(stringNetwork);
+            final Matcher matcherWep = patternWep.matcher(stringNetwork);
 
-            boolean connected = false;
             if (matcherWpa.find() && matcherWpa.groupCount() == 2) {
-                if(currNetwork != null && currNetwork.equals(matcherWpa.group(1))){
-                    connected = true;
+                final Network network = new Network(matcherWpa.group(1), matcherWpa.group(2), "wpa");
+                if (currentSsid != null && currentSsid.equals(matcherWpa.group(1))) {
+                    network.setConnected(true);
+                    currentNetwork = network;
+                } else {
+                    listNetworks.add(network);
                 }
-                final Network network = new Network(matcherWpa.group(1), matcherWpa.group(2),connected, "wpa");
-                listNetworks.add(network);
             } else if (matcherWep.find() && matcherWep.groupCount() == 2) {
-                if(currNetwork != null && currNetwork.equals(matcherWep.group(1))){
-                    connected = true;
+                final Network network = new Network(matcherWep.group(1), matcherWep.group(2), "wep");
+                if (currentSsid != null && currentSsid.equals(matcherWep.group(1))) {
+                    network.setConnected(true);
+                    currentNetwork = network;
+                } else {
+                    listNetworks.add(network);
                 }
-                final Network network = new Network(matcherWep.group(1), matcherWep.group(2),connected, "wep");
-                listNetworks.add(network);
             }
         }
 
         Collections.sort(listNetworks);
+        if (currentNetwork != null) {
+            listNetworks.add(0, currentNetwork);
+        }
 
         return listNetworks;
     }

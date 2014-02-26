@@ -42,12 +42,14 @@ public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filte
     private Filter networkFilter;
     private List<Network> listAllNetworks;
     private List<Network> list;
+    final LayoutInflater layoutInflater;
 
     public NetworkAdapter(final Context context, final List<Network> list) {
         super();
         this.context = context;
         this.list = list;
         this.listAllNetworks = list;
+        layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -71,7 +73,6 @@ public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filte
         final Network network = getItem(position);
         ViewHolder holder;
         if (convertView == null) {
-            final LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mConvertView = layoutInflater.inflate(R.layout.row, parent, false);
             holder = new ViewHolder();
             holder.tvSsid = (TextView) mConvertView.findViewById(R.id.tv_ssid);
