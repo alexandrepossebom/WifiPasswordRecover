@@ -47,13 +47,13 @@ public class NetworkParser extends AsyncTask<Void, Void, List<Network>> {
     }
 
     @Override
-    protected void onPostExecute(List<Network> networkList) {
+    protected final void onPostExecute(List<Network> networkList) {
         super.onPostExecute(networkList);
         listener.onParserDone(networkList);
     }
 
     @Override
-    protected List<Network> doInBackground(Void... params) {
+    protected final List<Network> doInBackground(Void... params) {
         final String currentSsid = Utils.getCurrentSsid(context);
         final List<Network> listNetworks = new ArrayList<Network>();
         final String content = readFile();

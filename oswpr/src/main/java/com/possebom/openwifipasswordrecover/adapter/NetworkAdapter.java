@@ -38,37 +38,35 @@ import java.util.Locale;
  */
 public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filterable {
     private static final String SECTIONS = "abcdefghilmnopqrstuvz";
-    private final Context context;
     private Filter networkFilter;
     private List<Network> listAllNetworks;
     private List<Network> list;
-    final LayoutInflater layoutInflater;
+    private final LayoutInflater layoutInflater;
 
     public NetworkAdapter(final Context context, final List<Network> list) {
         super();
-        this.context = context;
         this.list = list;
         this.listAllNetworks = list;
         layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
-    public int getCount() {
+    public final int getCount() {
         return list.size();
     }
 
     @Override
-    public Network getItem(final int position) {
+    public final Network getItem(final int position) {
         return list.get(position);
     }
 
     @Override
-    public long getItemId(final int position) {
+    public final long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
+    public final View getView(final int position, final View convertView, final ViewGroup parent) {
         View mConvertView = null;
         final Network network = getItem(position);
         ViewHolder holder;
@@ -90,7 +88,7 @@ public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filte
 
     // Code from survivingwithandroid.com
     @Override
-    public Object[] getSections() {
+    public final Object[] getSections() {
         final Character[] sectionsArr = new Character[SECTIONS.length()];
         for (int i = 0; i < SECTIONS.length(); i++) {
             sectionsArr[i] = SECTIONS.charAt(i);
@@ -100,7 +98,7 @@ public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filte
 
     // Code from survivingwithandroid.com
     @Override
-    public int getPositionForSection(int sectionIndex) {
+    public final int getPositionForSection(int sectionIndex) {
         int ret = 0;
         for (int i = 0; i < this.getCount(); i++) {
             final String ssid = this.getItem(i).getSsid().toLowerCase(Locale.getDefault());
@@ -113,12 +111,12 @@ public class NetworkAdapter extends BaseAdapter implements SectionIndexer, Filte
     }
 
     @Override
-    public int getSectionForPosition(int position) {
+    public final int getSectionForPosition(int position) {
         return 0;
     }
 
     @Override
-    public Filter getFilter() {
+    public final Filter getFilter() {
         if (networkFilter == null) {
             networkFilter = new NetworkFilter();
         }

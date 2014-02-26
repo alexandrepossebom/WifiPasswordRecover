@@ -51,31 +51,31 @@ public class NetworkFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
     }
 
     @Override
-    public void onResume() {
+    public final void onResume() {
         new NetworkParser(context, this).execute();
         super.onResume();
     }
 
     @Override
-    public boolean onQueryTextSubmit(String s) {
+    public final boolean onQueryTextSubmit(String s) {
         mSearchView.clearFocus();
         return true;
     }
 
     @Override
-    public boolean onQueryTextChange(String s) {
+    public final boolean onQueryTextChange(String s) {
         mAdapter.getFilter().filter(s);
         return true;
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public final void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) searchItem.getActionView();
@@ -84,7 +84,7 @@ public class NetworkFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public final boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_search) {
             mSearchView.setIconified(false);
@@ -94,7 +94,7 @@ public class NetworkFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstState) {
+    public final View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstState) {
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         final View viewNoData = view.findViewById(R.id.nodataview);
 
@@ -106,7 +106,7 @@ public class NetworkFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     @Override
-    public void onParserDone(List<Network> networkList) {
+    public final void onParserDone(List<Network> networkList) {
         mAdapter = new NetworkAdapter(context,networkList);
         listView.setAdapter(mAdapter);
         if(networkList.size() > 0 && networkList.get(0).isConnected()){
