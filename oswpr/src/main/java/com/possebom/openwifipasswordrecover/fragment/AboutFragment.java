@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.possebom.openwifipasswordrecover;
+package com.possebom.openwifipasswordrecover.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.possebom.openwifipasswordrecover.fragment.NetworkFragment;
+import com.possebom.openwifipasswordrecover.R;
 
-public class MainActivity extends FragmentActivity {
+/**
+ * Created by alexandre on 27/02/14.
+ */
+public class AboutFragment extends Fragment{
 
     @Override
-    protected final void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        if (savedInstanceState == null) {
-            final Fragment fragment = new NetworkFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.container, fragment,NetworkFragment.TAG).commit();
-        }
+    public final View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstState) {
+        return inflater.inflate(R.layout.fragment_about, container, false);
     }
 
 }

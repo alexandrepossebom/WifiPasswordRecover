@@ -16,8 +16,8 @@
 
 package com.possebom.openwifipasswordrecover.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,10 +40,10 @@ import java.util.List;
  * Created by alexandre on 20/02/14.
  */
 public class NetworkFragment extends ProgressFragment implements SearchView.OnQueryTextListener, NetworkListener {
+    public static final String TAG = "NetworkFragment";
     private NetworkAdapter mAdapter;
     private SearchView mSearchView;
     private ListView listView;
-    private Context context;
     private View contentView;
 
     public NetworkFragment() {
@@ -54,7 +54,6 @@ public class NetworkFragment extends ProgressFragment implements SearchView.OnQu
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        context = getActivity();
         setContentView(contentView);
         setEmptyText(R.string.no_data);
     }
@@ -62,13 +61,13 @@ public class NetworkFragment extends ProgressFragment implements SearchView.OnQu
     @Override
     public final void onResume() {
         setContentShown(false);
-        new NetworkParser(context, this).execute();
+        new NetworkParser(getActivity(), this).execute();
         super.onResume();
     }
 
     @Override
     public final boolean onQueryTextSubmit(String s) {
-        if(mSearchView != null){
+        if (mSearchView != null) {
             mSearchView.clearFocus();
         }
         return true;
@@ -76,7 +75,7 @@ public class NetworkFragment extends ProgressFragment implements SearchView.OnQu
 
     @Override
     public final boolean onQueryTextChange(String s) {
-        if(mAdapter != null){
+        if (mAdapter != null) {
             mAdapter.getFilter().filter(s);
         }
         return true;
@@ -98,6 +97,16 @@ public class NetworkFragment extends ProgressFragment implements SearchView.OnQu
             mSearchView.setIconified(false);
             return true;
         }
+        if (id == R.id.action_about) {
+            final Fragment fragmentAbout = new AboutFragment();
+            getActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, fragmentAbout)
+                    .addToBackStack(TAG)
+                    .commit();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -117,7 +126,7 @@ public class NetworkFragment extends ProgressFragment implements SearchView.OnQu
         if (networkList.isEmpty()) {
             setContentEmpty(true);
         } else {
-            mAdapter = new NetworkAdapter(context, networkList);
+            mAdapter = new NetworkAdapter(getActivity(), networkList);
             listView.setAdapter(mAdapter);
             if (networkList.size() > 0 && networkList.get(0).isConnected()) {
                 listView.setItemChecked(0, true);
