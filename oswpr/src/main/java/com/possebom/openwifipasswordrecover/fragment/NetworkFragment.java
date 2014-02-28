@@ -16,7 +16,6 @@
 
 package com.possebom.openwifipasswordrecover.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,9 +27,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.possebom.openwifipasswordrecover.interfaces.NetworkListener;
+import com.devspark.progressfragment.ProgressFragment;
 import com.possebom.openwifipasswordrecover.R;
 import com.possebom.openwifipasswordrecover.adapter.NetworkAdapter;
+import com.possebom.openwifipasswordrecover.interfaces.NetworkListener;
 import com.possebom.openwifipasswordrecover.model.Network;
 import com.possebom.openwifipasswordrecover.parser.NetworkParser;
 
@@ -39,11 +39,12 @@ import java.util.List;
 /**
  * Created by alexandre on 20/02/14.
  */
-public class NetworkFragment extends Fragment implements SearchView.OnQueryTextListener,NetworkListener {
+public class NetworkFragment extends ProgressFragment implements SearchView.OnQueryTextListener, NetworkListener {
     private NetworkAdapter mAdapter;
     private SearchView mSearchView;
     private ListView listView;
     private Context context;
+    private View contentView;
 
     public NetworkFragment() {
         setHasOptionsMenu(true);
@@ -51,26 +52,33 @@ public class NetworkFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     @Override
-    public final void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         context = getActivity();
+        setContentView(contentView);
+        setEmptyText(R.string.no_data);
     }
 
     @Override
     public final void onResume() {
+        setContentShown(false);
         new NetworkParser(context, this).execute();
         super.onResume();
     }
 
     @Override
     public final boolean onQueryTextSubmit(String s) {
-        mSearchView.clearFocus();
+        if(mSearchView != null){
+            mSearchView.clearFocus();
+        }
         return true;
     }
 
     @Override
     public final boolean onQueryTextChange(String s) {
-        mAdapter.getFilter().filter(s);
+        if(mAdapter != null){
+            mAdapter.getFilter().filter(s);
+        }
         return true;
     }
 
@@ -95,22 +103,26 @@ public class NetworkFragment extends Fragment implements SearchView.OnQueryTextL
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstState) {
-        final View view = inflater.inflate(R.layout.fragment_main, container, false);
-        final View viewNoData = view.findViewById(R.id.nodataview);
+        contentView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        listView = (ListView) view.findViewById(R.id.listview);
+        listView = (ListView) contentView.findViewById(R.id.listview);
         listView.setFastScrollEnabled(true);
-        listView.setEmptyView(viewNoData);
+        listView.setEmptyView(contentView.findViewById(R.id.nodataview));
 
-        return view;
+        return super.onCreateView(inflater, container, savedInstState);
     }
 
     @Override
     public final void onParserDone(List<Network> networkList) {
-        mAdapter = new NetworkAdapter(context,networkList);
-        listView.setAdapter(mAdapter);
-        if(networkList.size() > 0 && networkList.get(0).isConnected()){
-            listView.setItemChecked(0, true);
+        if (networkList.isEmpty()) {
+            setContentEmpty(true);
+        } else {
+            mAdapter = new NetworkAdapter(context, networkList);
+            listView.setAdapter(mAdapter);
+            if (networkList.size() > 0 && networkList.get(0).isConnected()) {
+                listView.setItemChecked(0, true);
+            }
         }
+        setContentShown(true);
     }
 }

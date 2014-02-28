@@ -16,12 +16,13 @@
 
 package com.possebom.openwifipasswordrecover;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 
 import com.possebom.openwifipasswordrecover.fragment.NetworkFragment;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().add(R.id.container, new NetworkFragment()).commit();
+            final Fragment fragment = new NetworkFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
         }
     }
 
