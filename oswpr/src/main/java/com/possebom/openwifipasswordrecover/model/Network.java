@@ -66,7 +66,9 @@ public class Network implements Comparable<Network> {
 
     @Override
     public final int compareTo(final Network o) {
-        if(o ==null) {return -1;}
+        if (o == null) {
+            return -1;
+        }
         return ssid.compareToIgnoreCase(o.ssid);
     }
 
@@ -78,7 +80,7 @@ public class Network implements Comparable<Network> {
     @Override
     public final boolean equals(final Object o) {
         boolean ret = false;
-        if(o != null){
+        if (o != null) {
             ret = o.toString().equals(toString());
         }
         return ret;

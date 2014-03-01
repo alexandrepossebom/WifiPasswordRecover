@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package com.possebom.openwifipasswordrecover.fragment;
-
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.possebom.openwifipasswordrecover.R;
+package eu.chainfire.libsuperuser;
 
 /**
- * Created by alexandre on 27/02/14.
+ * Exception class used to notify developer that a shell was not close()d
  */
-public class AboutFragment extends Fragment {
+@SuppressWarnings("serial")
+public class ShellNotClosedException extends RuntimeException {
+    public static final String EXCEPTION_NOT_CLOSED = "Application did not close() interactive shell";
 
-    @Override
-    public final View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstState) {
-        return inflater.inflate(R.layout.fragment_about, container, false);
+    public ShellNotClosedException() {
+        super(EXCEPTION_NOT_CLOSED);
     }
-
 }

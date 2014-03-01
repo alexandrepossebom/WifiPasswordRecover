@@ -31,7 +31,7 @@ public class MainActivity extends FragmentActivity {
 
         if (savedInstanceState == null) {
             final Fragment fragment = new NetworkFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.container, fragment,NetworkFragment.TAG).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, fragment, NetworkFragment.TAG).commit();
         }
     }
 

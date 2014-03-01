@@ -23,54 +23,80 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp">
+        android:layout_marginRight="3dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/about_text"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal" />
+            android:text="@string/about_text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
+            android:layout_marginTop="10dp"
             android:background="@android:color/darker_gray" />
 
         <TextView
+            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center_horizontal"
             android:text="@string/open_source_libs"
-            android:id="@+id/textView4"
-            android:layout_gravity="center_horizontal" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/progress_fragment"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:background="@android:color/darker_gray"
-            android:gravity="center" />
+            android:gravity="center"
+            android:text="@string/progress_fragment"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/license_progress_fragment"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
             android:background="#cccccc"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:text="@string/license_progress_fragment"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/darker_gray"
+            android:gravity="center"
+            android:text="@string/libsuperuser"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:background="#cccccc"
+            android:padding="5dp"
+            android:text="@string/license_libsuperuser"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp" />
     </LinearLayout>
+
 
 </ScrollView>
